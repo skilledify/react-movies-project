@@ -19,7 +19,6 @@ export function Preloader({ label = 'Загрузка…' }) {
 	);
 }
 
-/** Пульсирующая карточка-заглушка для сетки результатов. */
 export function MovieSkeleton() {
 	return (
 		<div className="card movie-card skeleton-card">

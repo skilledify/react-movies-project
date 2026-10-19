@@ -12,10 +12,6 @@ const TYPES = [
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 60 }, (_, i) => CURRENT_YEAR - i);
 
-/**
- * Панель поиска: дебаунс-поиск по тексту + фильтры по типу и году.
- * Отдаёт родителю { query, type, year } каждый раз, когда что-то меняется.
- */
 export function Search({ onSearch }) {
 	const [query, setQuery] = useState('');
 	const [type, setType] = useState('all');
@@ -26,7 +22,7 @@ export function Search({ onSearch }) {
 	const isFirstRender = useRef(true);
 	const debouncedQuery = useDebouncedValue(query, 600);
 
-	// Только английские буквы, цифры, пробелы, дефис, апостроф и точка
+	
 	const ENGLISH_ONLY_REGEX = /^[a-zA-Z0-9\s\-'\.]*$/;
 
 	const validateQuery = (value) => {
@@ -42,7 +38,7 @@ export function Search({ onSearch }) {
 		return true;
 	};
 
-	// Materialize select требует ручной инициализации
+	
 	useEffect(() => {
 		const instances = [
 			M.FormSelect.init(typeSelectRef.current),
@@ -52,17 +48,17 @@ export function Search({ onSearch }) {
 	}, []);
 
 	useEffect(() => {
-		// Пропускаем первый рендер: Home сам делает стартовый запрос
+		
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
 			return;
 		}
-		// Блокируем поиск при ошибке валидации
+		
 		if (!validateQuery(debouncedQuery)) {
 			return;
 		}
 		onSearch({ query: debouncedQuery, type, year });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		
 	}, [debouncedQuery, type, year]);
 
 	return (
@@ -137,4 +133,3 @@ export function Search({ onSearch }) {
 		</div>
 	);
 }
-

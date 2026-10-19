@@ -7,7 +7,6 @@ import { MovieDetails } from './pages/MovieDetails';
 import { Favorites } from './pages/Favorites';
 import { FavoritesProvider } from './context/FavoritesContext';
 
-/** Прокручивает страницу наверх при смене маршрута. */
 function ScrollToTop() {
 	const { pathname } = useLocation();
 

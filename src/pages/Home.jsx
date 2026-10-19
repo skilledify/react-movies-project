@@ -12,10 +12,10 @@ export function Home() {
 	const [error, setError] = useState(null);
 	const [page, setPage] = useState(1);
 	const [total, setTotal] = useState(0);
-	const [searched, setSearched] = useState(false); // был ли хоть один поиск
+	const [searched, setSearched] = useState(false); 
 	const [hero, setHero] = useState(null);
 
-	// Последние применённые фильтры — для пагинации
+	
 	const requestRef = useRef({ query: '', type: 'all', year: '' });
 
 	const fetchMovies = useCallback(async (filters, targetPage) => {
@@ -38,8 +38,8 @@ export function Home() {
 		}
 	}, []);
 
-	// Рандомный «герой» из трендовых. Автопоиска нет:
-	// стартовая страница остаётся пустой до первого действия пользователя.
+	
+	
 	useEffect(() => {
 		const randomTrend = TRENDING[Math.floor(Math.random() * TRENDING.length)];
 		searchMovies(randomTrend)
@@ -55,7 +55,7 @@ export function Home() {
 			requestRef.current = filters;
 			setPage(1);
 			if (!filters.query.trim()) {
-				// Пустой запрос — возвращаем чистую стартовую страницу
+				
 				setMovies([]);
 				setTotal(0);
 				setError(null);
@@ -88,7 +88,6 @@ export function Home() {
 
 	return (
 		<section className="container content">
-			{/* Hero-баннер */}
 			<div className="hero card z-depth-2">
 				<div className="hero-content">
 					<span className="hero-badge chip">Подборка недели</span>
@@ -153,4 +152,3 @@ export function Home() {
 		</section>
 	);
 }
-

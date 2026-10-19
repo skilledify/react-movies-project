@@ -3,6 +3,17 @@
 	"version": "2.0.0",
 	"private": true,
 	"type": "module",
+	"description": "Каталог фильмов и сериалов на React 19 + Vite с тёмной и светлой темами, поиском и избранным",
+	"keywords": [
+		"react",
+		"vite",
+		"materialize-css",
+		"movies",
+		"omdb",
+		"spa"
+	],
+	"author": "skilledify",
+	"license": "MIT",
 	"homepage": "https://skilledify.github.io/react-movies-project",
 	"scripts": {
 		"dev": "vite",

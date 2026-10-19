@@ -1,10 +1,7 @@
-/**
- * Пагинация по 10 результатов (лимит OMDb API).
- * Строит окно страниц вокруг текущей.
- */
+
 export function Pagination({ page, total, onChange }) {
 	const perPage = 10;
-	const totalPages = Math.min(Math.ceil(total / perPage), 100); // API отдаёт максимум 1000 результатов
+	const totalPages = Math.min(Math.ceil(total / perPage), 100);
 
 	if (totalPages <= 1) return null;
 

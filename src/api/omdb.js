@@ -1,11 +1,6 @@
 const API_KEY = import.meta.env.VITE_OMDB_API_KEY || 'c8a24847';
 const BASE_URL = 'https://www.omdbapi.com/';
 
-/**
- * Базовый запрос к OMDb API.
- * @param {Record<string, string|number>} params
- * @returns {Promise<object>}
- */
 async function request(params) {
 	const url = new URL(BASE_URL);
 	url.searchParams.set('apikey', API_KEY);
@@ -26,9 +21,6 @@ async function request(params) {
 	return data;
 }
 
-/**
- * Поиск фильмов/сериалов с пагинацией (по 10 результатов).
- */
 export function searchMovies(query, { type = 'all', year = '', page = 1 } = {}) {
 	return request({
 		s: query,
@@ -38,16 +30,10 @@ export function searchMovies(query, { type = 'all', year = '', page = 1 } = {}) 
 	});
 }
 
-/**
- * Полная информация о тайтле по IMDb ID.
- */
 export function getMovieDetails(imdbID) {
 	return request({ i: imdbID, plot: 'full' });
 }
 
-/**
- * Простой список похожих тайтлов по названию.
- */
 export function getSimilarMovies(title) {
 	return request({ s: title }).catch(() => ({ Search: [] }));
 }

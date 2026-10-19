@@ -1,8 +1,3 @@
-/* ============================================================
-   React Movies — современная тема поверх Materialize CSS
-   Тёмная тема по умолчанию, светлая через data-theme="light"
-   ============================================================ */
-
 :root,
 html[data-theme='dark'] {
 	--bg: #0d1117;
@@ -38,7 +33,6 @@ html[data-theme='light'] {
 	box-sizing: border-box;
 }
 
-/* Контент на всю ширину на всех экранах */
 .container {
 	width: 100% !important;
 	max-width: none !important;
@@ -76,8 +70,6 @@ a {
 	color: var(--accent);
 }
 
-/* ---------- Каркас приложения ---------- */
-
 .app-shell {
 	display: flex;
 	flex-direction: column;
@@ -91,8 +83,6 @@ a {
 .content {
 	padding: 1.5rem 0 3rem;
 }
-
-/* ---------- Навигация ---------- */
 
 .app-nav {
 	background: color-mix(in srgb, var(--bg) 82%, transparent) !important;
@@ -128,12 +118,6 @@ a {
 	font-size: 1.7rem;
 }
 
-/* Логотип всегда в крайнем левом положении — на всех ширинах.
-   Materialize позиционирует .brand-logo абсолютно и центрирует его
-   на адаптиве (правило `nav .brand-logo { left: 50%; transform: ... }`),
-   из-за чего меню могло наезжать на логотип. Держим логотип в потоке
-   flex-раскладки слева: margin-right: auto прижимает меню (десктоп)
-   и бургер (адаптив) вправо. */
 .app-nav .brand-logo {
 	position: static !important;
 	display: flex !important;
@@ -145,8 +129,6 @@ a {
 	margin-right: 0;
 }
 
-/* Бургер: Materialize красит `nav a` в #fff — на светлой теме белая
-   иконка на белом фоне не видна. Окрашиваем по текущей теме. */
 .app-nav .sidenav-trigger,
 .app-nav .sidenav-trigger i {
 	color: var(--text) !important;
@@ -207,8 +189,7 @@ li.disabled-action > a {
 	width: 48px;
 	height: 48px;
 	padding: 0 !important;
-	/* один ряд с пунктами меню: block-level flex вместо inline-block
-	   по базовой линии (btn-flat) + центровка иконки */
+	
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -225,7 +206,6 @@ li.disabled-action > a {
 	background: var(--accent-soft) !important;
 }
 
-/* Sidenav */
 .sidenav {
 	background: var(--surface) !important;
 }
@@ -247,7 +227,6 @@ li.disabled-action > a {
 	background: transparent;
 }
 
-/* Кнопка закрытия мобильного меню (X) */
 .sidenav-close-btn {
 	position: absolute;
 	top: 1rem;
@@ -287,8 +266,6 @@ li.disabled-action > a {
 .gradient-block {
 	background: var(--hero-grad) !important;
 }
-
-/* ---------- Hero ---------- */
 
 .hero {
 	position: relative;
@@ -372,8 +349,6 @@ li.disabled-action > a {
 	transform: translateY(-1px);
 }
 
-/* ---------- Панель поиска ---------- */
-
 .search-panel {
 	background: var(--surface) !important;
 	border-radius: 16px !important;
@@ -392,9 +367,6 @@ li.disabled-action > a {
 	gap: 1rem;
 }
 
-/* На экранах уже́ меньше 920px поля поиска и фильтры встают колонкой:
-   каждый input-field на всю ширину, один под другим. Высота полей сжата
-   для компактного отображения на телефонах и планшетах. */
 @media (max-width: 919px) {
 	:root {
 		--search-field-height: 2.75rem;
@@ -412,13 +384,13 @@ li.disabled-action > a {
 		float: none !important;
 		max-width: 100% !important;
 	}
-	/* Все поля поиска/фильтров — одинаковая высота (как у первого поля) */
+	
 	.search-row input[type='search'],
 	.search-row .select-wrapper input[type="text"],
 	.search-row .select-wrapper .dropdown-trigger {
 		height: var(--search-field-height) !important;
 	}
-	/* Выпадающий список Materialize на адаптиве: полная ширина, не обрезается, поверх всего */
+	
 	.search-row .select-wrapper {
 		position: relative;
 		overflow: visible;
@@ -462,7 +434,6 @@ li.disabled-action > a {
 	border-bottom: 2px solid var(--accent) !important;
 }
 
-/* Placeholder в поле поиска — более прозрачный, чтобы не отвлекал */
 .search-panel input[type='search']::placeholder {
 	color: color-mix(in srgb, var(--text-muted), transparent 45%) !important;
 	opacity: 1 !important;
@@ -472,11 +443,6 @@ li.disabled-action > a {
 	color: var(--text-muted) !important;
 }
 
-/* Подписи «Поиск по названию», «Тип», «Год» — в один ряд и по левому
-   краю текста инпутов. Materialize для селектов задаёт
-   `.select-wrapper + label { top: -26px; font-size: 0.8rem }` (подписи
-   висели выше панели другим кеглем), плюс у всех подписей left: 11.25px —
-   на 11px правее текста в инпуте. Унифицируем top, кегль и left. */
 .search-panel .input-field > label {
 	top: 0;
 	left: 0;
@@ -507,21 +473,18 @@ li.disabled-action > a {
 	background: var(--accent-soft) !important;
 }
 
-/* Цвет галочки/стрелки у выпадающего списка (Materialize select) */
 .search-panel .select-wrapper .caret,
 .search-panel .select-wrapper input.select-dropdown + i,
 .search-panel .select-wrapper i.material-icons {
 	color: var(--accent) !important;
 }
 
-/* Стрелка триггера селекта — белым в тёмной теме */
 html[data-theme='dark'] .search-panel .select-wrapper .caret,
 html[data-theme='dark'] .search-panel .select-wrapper input.select-dropdown + i,
 html[data-theme='dark'] .search-panel .select-wrapper i.material-icons {
 	color: #fff !important;
 }
 
-/* Цвет галочки у выбранного элемента в выпадающем списке */
 .search-panel .dropdown-content li.active i.material-icons,
 .search-panel .dropdown-content li.active span i.material-icons,
 .search-panel .dropdown-content li.selected i.material-icons,
@@ -529,7 +492,6 @@ html[data-theme='dark'] .search-panel .select-wrapper i.material-icons {
 	color: var(--accent) !important;
 }
 
-/* Любая иконка внутри выбранного пункта селекта — белым в тёмной теме */
 html[data-theme='dark'] .search-panel .dropdown-content li.selected i,
 html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	color: #fff !important;
@@ -541,8 +503,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	top: 0.4rem;
 	color: var(--text-muted) !important;
 }
-
-/* ---------- Результаты ---------- */
 
 .results-head {
 	display: flex;
@@ -574,8 +534,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 .clear-fav-btn {
 	color: var(--accent) !important;
 }
-
-/* ---------- Сетка фильмов ---------- */
 
 .movies {
 	display: grid;
@@ -717,7 +675,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	font-weight: 600;
 }
 
-/* Скелетоны загрузки */
 .skeleton-card {
 	pointer-events: none;
 }
@@ -752,8 +709,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	}
 }
 
-/* ---------- Прелоадер / пустое состояние / ошибки ---------- */
-
 .preloader-box {
 	display: flex;
 	flex-direction: column;
@@ -777,8 +732,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	color: var(--text-muted);
 }
 
-/* Крупная иконка-заглушка (только прямые дети: иконки внутри
-   кнопок вроде «Перейти к поиску» в неё не попадают) */
 .empty-state > .material-icons {
 	font-size: 4rem;
 	color: var(--text-muted);
@@ -802,8 +755,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 .error-panel .material-icons {
 	color: var(--accent);
 }
-
-/* ---------- Пагинация ---------- */
 
 .pagination {
 	margin: 2.5rem 0 1rem;
@@ -873,8 +824,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 .pagination li.disabled button {
 	cursor: default;
 }
-
-/* ---------- Страница фильма ---------- */
 
 .breadcrumbs {
 	display: flex;
@@ -1044,8 +993,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	line-height: 1.4;
 }
 
-/* ---------- Кнопки ---------- */
-
 .btn,
 .btn-flat {
 	text-transform: none;
@@ -1058,8 +1005,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 	background: var(--accent) !important;
 }
 
-/* Иконка с классом .left внутри кнопки: вписывается в высоту кнопки
-   (36px) и центрируется по строке текста, а не прижимается к верху */
 .btn .material-icons.left,
 .btn-flat .material-icons.left {
 	font-size: 1.25rem;
@@ -1071,8 +1016,6 @@ html[data-theme='dark'] .search-panel .dropdown-content li.active i {
 .btn:focus {
 	background: color-mix(in srgb, var(--accent) 85%, #000) !important;
 }
-
-/* ---------- Футер ---------- */
 
 footer.page-footer {
 	background: var(--bg-soft) !important;
@@ -1130,8 +1073,6 @@ footer.page-footer p {
 	color: var(--accent);
 }
 
-/* ---------- Toast-уведомления Materialize ---------- */
-
 #toast-container {
 	top: auto !important;
 	bottom: 6% !important;
@@ -1147,8 +1088,6 @@ footer.page-footer p {
 	background-color: var(--surface-2) !important;
 	color: var(--text) !important;
 }
-
-/* ---------- Адаптив ---------- */
 
 @media only screen and (max-width: 992px) {
 	.details-card {
@@ -1190,7 +1129,6 @@ footer.page-footer p {
 	}
 }
 
-/* Скроллбар */
 ::-webkit-scrollbar {
 	width: 10px;
 }
@@ -1207,6 +1145,3 @@ footer.page-footer p {
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--accent);
 }
-
-
-

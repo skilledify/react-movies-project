@@ -28,13 +28,13 @@ export function Navbar() {
 		localStorage.setItem(THEME_KEY, theme);
 	}, [theme]);
 
-	// Инициализация Materialize-компонентов
+	
 	useEffect(() => {
 		M.Sidenav.init(sidenavRef.current, { edge: 'right' });
 		M.Tooltip.init(document.querySelectorAll('.tooltipped'));
 	}, []);
 
-	// Закрываем sidenav при переходе
+	
 	useEffect(() => {
 		const instance = M.Sidenav.getInstance(sidenavRef.current);
 		if (instance && instance.isOpen) instance.close();
@@ -42,12 +42,12 @@ export function Navbar() {
 
 	const toggleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
-	/** Переход на страницу случайного фильма из трендовых запросов. */
+	
 	const handleRandomMovie = useCallback(
 		async (event) => {
 			event.preventDefault();
 			if (picking) return;
-			// Закрываем мобильное меню, если оно открыто
+			
 			const sidenav = M.Sidenav.getInstance(sidenavRef.current);
 			if (sidenav && sidenav.isOpen) sidenav.close();
 			setPicking(true);

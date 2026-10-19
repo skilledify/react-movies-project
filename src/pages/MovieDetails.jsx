@@ -8,7 +8,6 @@ import { useFavorites } from '../context/FavoritesContext';
 const FALLBACK_POSTER =
 	'https://via.placeholder.com/300x450/1a1a2e/e94560?text=No+Poster';
 
-/** Строка «ключ: значение», скрывает пустые поля OMDb. */
 function InfoRow({ icon, label, value }) {
 	if (!value || value === 'N/A') return null;
 	return (

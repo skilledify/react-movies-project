@@ -25,11 +25,7 @@ export function FavoritesProvider({ children }) {
 		[favorites]
 	);
 
-	/**
-	 * Добавляет/удаляет фильм. Важно: тост показывается ВНЕ функции-апдейтера —
-	 * React StrictMode в dev дважды вызывает апдейтеры состояния, и тост
-	 * внутри setFavorites дублировался бы (2 уведомления вместо 1).
-	 */
+	
 	const toggleFavorite = useCallback(
 		(movie) => {
 			const exists = favorites.some((item) => item.imdbID === movie.imdbID);
