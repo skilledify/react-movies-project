@@ -1,0 +1,1212 @@
+/* ============================================================
+   React Movies — современная тема поверх Materialize CSS
+   Тёмная тема по умолчанию, светлая через data-theme="light"
+   ============================================================ */
+
+:root,
+html[data-theme='dark'] {
+	--bg: #0d1117;
+	--bg-soft: #161b22;
+	--surface: #1c2333;
+	--surface-2: #232b3d;
+	--text: #e6edf3;
+	--text-muted: #8b949e;
+	--accent: #e94560;
+	--accent-soft: rgba(233, 69, 96, 0.15);
+	--accent-2: #f5a623;
+	--border: rgba(255, 255, 255, 0.08);
+	--shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+	--hero-grad: linear-gradient(135deg, #1f2b47 0%, #2b1e3d 55%, #3d1f2b 100%);
+}
+
+html[data-theme='light'] {
+	--bg: #f4f6fb;
+	--bg-soft: #eaeef7;
+	--surface: #ffffff;
+	--surface-2: #f0f3fa;
+	--text: #1c2333;
+	--text-muted: #5c6779;
+	--accent: #d63a55;
+	--accent-soft: rgba(214, 58, 85, 0.12);
+	--accent-2: #c98a12;
+	--border: rgba(15, 23, 42, 0.1);
+	--shadow: 0 10px 30px rgba(20, 30, 60, 0.1);
+	--hero-grad: linear-gradient(135deg, #3b4c8a 0%, #6b3f7a 55%, #a03c5a 100%);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/* Контент на всю ширину на всех экранах */
+.container {
+	width: 100% !important;
+	max-width: none !important;
+	padding: 0 0.9375rem !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Manrope', 'Inter', sans-serif;
+	color: var(--text);
+	letter-spacing: -0.02em;
+}
+
+a {
+	color: var(--accent);
+}
+
+.accent-text {
+	color: var(--accent);
+}
+
+/* ---------- Каркас приложения ---------- */
+
+.app-shell {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+.app-main {
+	flex: 1 0 auto;
+}
+
+.content {
+	padding: 1.5rem 0 3rem;
+}
+
+/* ---------- Навигация ---------- */
+
+.app-nav {
+	background: color-mix(in srgb, var(--bg) 82%, transparent) !important;
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border-bottom: 1px solid var(--border);
+	position: sticky !important;
+	top: 0;
+	z-index: 999;
+}
+
+.app-nav .nav-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+	height: 64px;
+}
+
+.brand-logo {
+	position: static;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: 'Manrope', sans-serif;
+	font-weight: 800;
+	font-size: 1.5rem !important;
+	color: var(--text) !important;
+	margin-right: auto;
+}
+
+.brand-icon {
+	color: var(--accent);
+	font-size: 1.7rem;
+}
+
+/* Логотип всегда в крайнем левом положении — на всех ширинах.
+   Materialize позиционирует .brand-logo абсолютно и центрирует его
+   на адаптиве (правило `nav .brand-logo { left: 50%; transform: ... }`),
+   из-за чего меню могло наезжать на логотип. Держим логотип в потоке
+   flex-раскладки слева: margin-right: auto прижимает меню (десктоп)
+   и бургер (адаптив) вправо. */
+.app-nav .brand-logo {
+	position: static !important;
+	display: flex !important;
+	transform: none !important;
+}
+
+.app-nav .brand-logo .brand-icon {
+	float: none;
+	margin-right: 0;
+}
+
+/* Бургер: Materialize красит `nav a` в #fff — на светлой теме белая
+   иконка на белом фоне не видна. Окрашиваем по текущей теме. */
+.app-nav .sidenav-trigger,
+.app-nav .sidenav-trigger i {
+	color: var(--text) !important;
+}
+
+.app-nav .sidenav-trigger:hover i {
+	color: var(--accent) !important;
+}
+
+.app-nav ul li a {
+	color: var(--text-muted) !important;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	transition: color 0.2s ease;
+}
+
+.app-nav ul li a:hover,
+.app-nav ul li a.active-link {
+	color: var(--accent) !important;
+}
+
+.app-nav ul {
+	display: flex;
+	align-items: center;
+	float: none;
+	margin: 0;
+	flex-shrink: 0;
+}
+
+li.disabled-action > a {
+	pointer-events: none;
+	opacity: 0.6;
+}
+
+.app-nav ul li a .material-icons {
+	font-size: 1.1rem;
+	margin-right: 0.4rem;
+}
+
+.fav-badge {
+	position: static !important;
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 18px;
+	line-height: 18px;
+	margin-left: 0.45rem;
+	background: var(--accent) !important;
+	font-size: 0.7rem;
+}
+
+.theme-toggle {
+	color: var(--text) !important;
+	margin-right: 0 !important;
+	width: 48px;
+	height: 48px;
+	padding: 0 !important;
+	/* один ряд с пунктами меню: block-level flex вместо inline-block
+	   по базовой линии (btn-flat) + центровка иконки */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+}
+
+.theme-toggle .material-icons {
+	font-size: 1.4rem;
+	height: auto;
+	line-height: 1;
+}
+
+.theme-toggle:hover {
+	background: var(--accent-soft) !important;
+}
+
+/* Sidenav */
+.sidenav {
+	background: var(--surface) !important;
+}
+
+.sidenav li a {
+	color: var(--text) !important;
+}
+
+.sidenav li a:hover,
+.sidenav li a.active {
+	background: var(--accent-soft) !important;
+}
+
+.sidenav .sidenav-header {
+	position: relative;
+}
+
+.sidenav .sidenav-header .user-view {
+	background: transparent;
+}
+
+/* Кнопка закрытия мобильного меню (X) */
+.sidenav-close-btn {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--surface-2) !important;
+	color: var(--text) !important;
+	border-radius: 8px !important;
+	border: none !important;
+	padding: 0 !important;
+	cursor: pointer;
+	z-index: 1001;
+}
+
+.sidenav-close-btn .material-icons {
+	font-size: 1.4rem;
+	color: var(--text) !important;
+}
+
+.sidenav-close-btn:hover {
+	background: color-mix(in srgb, var(--surface-2) 80%, #000) !important;
+	color: var(--text) !important;
+}
+
+.avatarka {
+	background: var(--accent) !important;
+	color: #fff !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.gradient-block {
+	background: var(--hero-grad) !important;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+	position: relative;
+	overflow: hidden;
+	background: var(--hero-grad);
+	border-radius: 20px !important;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--shadow);
+}
+
+.hero-content {
+	position: relative;
+	z-index: 2;
+	padding: 2.8rem 2.5rem;
+	max-width: 720px;
+	color: #fff;
+}
+
+.hero-content h4 {
+	color: #fff;
+	font-size: 2rem;
+	font-weight: 800;
+	margin: 0.8rem 0 0.6rem;
+}
+
+.hero-content p {
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 1.02rem;
+	line-height: 1.6;
+	margin: 0.3rem 0;
+}
+
+.hero-badge {
+	background: rgba(255, 255, 255, 0.16) !important;
+	color: #fff !important;
+	font-size: 0.8rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.hero-trending {
+	font-size: 0.95rem;
+}
+
+.hero-trending b {
+	color: #ffd166 !important;
+}
+
+.hero-stripe {
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(
+			circle at 85% 20%,
+			rgba(233, 69, 96, 0.4),
+			transparent 45%
+		),
+		radial-gradient(circle at 70% 90%, rgba(245, 166, 35, 0.25), transparent 40%);
+	pointer-events: none;
+}
+
+.trending-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 1.2rem;
+}
+
+.trending-chip {
+	color: #fff !important;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 999px;
+	height: 34px !important;
+	line-height: 32px !important;
+	padding: 0 1rem !important;
+	font-size: 0.85rem;
+	transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.trending-chip:hover {
+	background: rgba(255, 255, 255, 0.16) !important;
+	transform: translateY(-1px);
+}
+
+/* ---------- Панель поиска ---------- */
+
+.search-panel {
+	background: var(--surface) !important;
+	border-radius: 16px !important;
+	padding: 1.2rem 1.4rem 0.6rem;
+	margin-bottom: 1.6rem;
+	border: 1px solid var(--border);
+}
+
+.search-row {
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 1rem;
+}
+
+/* На экранах уже́ меньше 920px поля поиска и фильтры встают колонкой:
+   каждый input-field на всю ширину, один под другим. Высота полей сжата
+   для компактного отображения на телефонах и планшетах. */
+@media (max-width: 919px) {
+	:root {
+		--search-field-height: 2.75rem;
+	}
+
+	.search-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1.25rem;
+	}
+	.search-row .input-field {
+		width: 100% !important;
+		flex-basis: 100% !important;
+		flex: 0 0 100% !important;
+		float: none !important;
+		max-width: 100% !important;
+	}
+	/* Все поля поиска/фильтров — одинаковая высота (как у первого поля) */
+	.search-row input[type='search'],
+	.search-row .select-wrapper input[type="text"],
+	.search-row .select-wrapper .dropdown-trigger {
+		height: var(--search-field-height) !important;
+	}
+	/* Выпадающий список Materialize на адаптиве: полная ширина, не обрезается, поверх всего */
+	.search-row .select-wrapper {
+		position: relative;
+		overflow: visible;
+	}
+	.search-row .dropdown-content {
+		position: absolute !important;
+		top: 100% !important;
+		left: 0 !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		max-height: 300px !important;
+		overflow-y: auto !important;
+		z-index: 1000 !important;
+	}
+	.search-row .dropdown-content li {
+		width: 100%;
+	}
+	.search-row .dropdown-content li span {
+		width: 100%;
+		display: block;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.search-panel .input-field {
+	margin: 0;
+	padding: 0;
+	flex: 1 1 200px;
+}
+
+.search-panel input[type='search'] {
+	color: var(--text) !important;
+	background: transparent !important;
+	border-bottom: 1px solid var(--border) !important;
+	box-shadow: none !important;
+}
+
+.search-panel input[type='search']:focus {
+	border-bottom: 2px solid var(--accent) !important;
+}
+
+/* Placeholder в поле поиска — более прозрачный, чтобы не отвлекал */
+.search-panel input[type='search']::placeholder {
+	color: color-mix(in srgb, var(--text-muted), transparent 45%) !important;
+	opacity: 1 !important;
+}
+
+.search-panel label {
+	color: var(--text-muted) !important;
+}
+
+/* Подписи «Поиск по названию», «Тип», «Год» — в один ряд и по левому
+   краю текста инпутов. Materialize для селектов задаёт
+   `.select-wrapper + label { top: -26px; font-size: 0.8rem }` (подписи
+   висели выше панели другим кеглем), плюс у всех подписей left: 11.25px —
+   на 11px правее текста в инпуте. Унифицируем top, кегль и left. */
+.search-panel .input-field > label {
+	top: 0;
+	left: 0;
+	font-size: 15px;
+}
+
+.search-panel .prefix.active {
+	color: var(--accent) !important;
+}
+
+.search-panel .select-wrapper input.select-dropdown {
+	color: var(--text) !important;
+	border-bottom: 1px solid var(--border) !important;
+	background: transparent;
+}
+
+.search-panel .dropdown-content {
+	background: var(--surface-2);
+}
+
+.search-panel .dropdown-content li > a,
+.search-panel .dropdown-content li > span {
+	color: var(--text) !important;
+}
+
+.search-panel .dropdown-content li.active,
+.search-panel .dropdown-content li:hover {
+	background: var(--accent-soft) !important;
+}
+
+/* Цвет галочки/стрелки у выпадающего списка (Materialize select) */
+.search-panel .select-wrapper .caret,
+.search-panel .select-wrapper input.select-dropdown + i,
+.search-panel .select-wrapper i.material-icons {
+	color: var(--accent) !important;
+}
+
+/* Стрелка триггера селекта — белым в тёмной теме */
+html[data-theme='dark'] .search-panel .select-wrapper .caret,
+html[data-theme='dark'] .search-panel .select-wrapper input.select-dropdown + i,
+html[data-theme='dark'] .search-panel .select-wrapper i.material-icons {
+	color: #fff !important;
+}
+
+/* Цвет галочки у выбранного элемента в выпадающем списке */
+.search-panel .dropdown-content li.active i.material-icons,
+.search-panel .dropdown-content li.active span i.material-icons,
+.search-panel .dropdown-content li.selected i.material-icons,
+.search-panel .dropdown-content li.selected span i.material-icons {
+	color: var(--accent) !important;
+}
+
+/* Любая иконка внутри выбранного пункта селекта — белым в тёмной теме */
+html[data-theme='dark'] .search-panel .dropdown-content li.selected i,
+html[data-theme='dark'] .search-panel .dropdown-content li.active i {
+	color: #fff !important;
+}
+
+.clear-btn {
+	position: absolute;
+	right: 0;
+	top: 0.4rem;
+	color: var(--text-muted) !important;
+}
+
+/* ---------- Результаты ---------- */
+
+.results-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin: 1rem 0 1.2rem;
+}
+
+.results-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0;
+	font-weight: 700;
+}
+
+.results-title .material-icons {
+	color: var(--accent);
+}
+
+.results-count {
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	margin-left: 0.8rem;
+}
+
+.clear-fav-btn {
+	color: var(--accent) !important;
+}
+
+/* ---------- Сетка фильмов ---------- */
+
+.movies {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 1.4rem;
+}
+
+.movie-card {
+	background: var(--surface) !important;
+	border-radius: 16px !important;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	box-shadow: none !important;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+	display: flex;
+	flex-direction: column;
+}
+
+.movie-card:hover {
+	transform: translateY(-6px);
+	box-shadow: var(--shadow);
+	border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.movie-card .card-image {
+	position: relative;
+	background: var(--surface-2);
+}
+
+.movie-card .card-image img {
+	width: 100%;
+	height: 340px;
+	object-fit: cover;
+	display: block;
+}
+
+.poster-link {
+	display: block;
+	position: relative;
+}
+
+.poster-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.3rem;
+	background: rgba(13, 17, 23, 0.65);
+	color: #fff;
+	font-weight: 600;
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+.poster-link:hover .poster-overlay {
+	opacity: 1;
+}
+
+.type-chip {
+	position: absolute !important;
+	top: 0.8rem;
+	left: 0.8rem;
+	height: 24px !important;
+	line-height: 24px !important;
+	font-size: 0.72rem !important;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	background: rgba(13, 17, 23, 0.78) !important;
+	color: #fff !important;
+	pointer-events: none;
+}
+
+.fav-btn {
+	position: absolute !important;
+	top: 0.5rem;
+	right: 0.5rem;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	background: rgba(13, 17, 23, 0.72) !important;
+	color: #fff !important;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.fav-btn:hover {
+	transform: scale(1.12);
+}
+
+.fav-btn.is-fav {
+	color: var(--accent) !important;
+}
+
+.movie-card .card-content {
+	padding: 1rem 1.1rem 1.1rem !important;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.movie-title {
+	display: block;
+	font-size: 1.02rem !important;
+	line-height: 1.35 !important;
+	color: var(--text) !important;
+	font-weight: 600 !important;
+	height: auto !important;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	margin-bottom: 0 !important;
+}
+
+.movie-title:hover {
+	color: var(--accent) !important;
+}
+
+.movie-meta {
+	display: flex;
+	align-items: center;
+	gap: 0.3rem;
+	color: var(--text-muted);
+	font-size: 0.85rem;
+	margin: 0.3rem 0 0;
+}
+
+.movie-meta .rating {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.15rem;
+	color: var(--accent-2);
+	font-weight: 600;
+}
+
+/* Скелетоны загрузки */
+.skeleton-card {
+	pointer-events: none;
+}
+
+.skeleton-poster {
+	height: 340px;
+}
+
+.shimmer {
+	background: linear-gradient(
+		100deg,
+		var(--surface-2) 40%,
+		color-mix(in srgb, var(--surface-2) 60%, var(--text-muted)) 50%,
+		var(--surface-2) 60%
+	);
+	background-size: 200% 100%;
+	animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-line {
+	height: 14px;
+	border-radius: 6px;
+	margin: 0.5rem 0;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: 150% 0;
+	}
+	100% {
+		background-position: -50% 0;
+	}
+}
+
+/* ---------- Прелоадер / пустое состояние / ошибки ---------- */
+
+.preloader-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 3.5rem 0;
+	gap: 1rem;
+}
+
+.preloader-label {
+	color: var(--text-muted);
+	font-size: 0.95rem;
+}
+
+.spinner-accent-only .spinner-path {
+	border-color: var(--accent) !important;
+}
+
+.empty-state {
+	text-align: center;
+	padding: 4rem 1rem;
+	color: var(--text-muted);
+}
+
+/* Крупная иконка-заглушка (только прямые дети: иконки внутри
+   кнопок вроде «Перейти к поиску» в неё не попадают) */
+.empty-state > .material-icons {
+	font-size: 4rem;
+	color: var(--text-muted);
+	opacity: 0.55;
+}
+
+.empty-state h5 {
+	margin: 1rem 0 0.4rem;
+}
+
+.error-panel {
+	background: var(--accent-soft) !important;
+	color: var(--text) !important;
+	border-left: 4px solid var(--accent);
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	margin: 1rem 0;
+}
+
+.error-panel .material-icons {
+	color: var(--accent);
+}
+
+/* ---------- Пагинация ---------- */
+
+.pagination {
+	margin: 2.5rem 0 1rem;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.pagination li {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 38px;
+	background: var(--surface) !important;
+	border: 1px solid var(--border);
+	border-radius: 10px !important;
+	overflow: hidden;
+	margin: 0 0.15rem;
+}
+
+.pagination li.active {
+	background: var(--accent) !important;
+	border-color: var(--accent);
+}
+
+.pagination li.disabled {
+	opacity: 0.45;
+}
+
+.pagination li a,
+.pagination li button {
+	color: var(--text) !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	min-width: 38px;
+	padding: 0;
+	line-height: 1;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+.pagination li .material-icons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5rem;
+	line-height: 1;
+}
+
+.pagination li.disabled span {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 38px;
+	height: 100%;
+	line-height: 1;
+}
+
+.pagination li.active a,
+.pagination li.active button {
+	color: #fff !important;
+}
+
+.pagination li.disabled button {
+	cursor: default;
+}
+
+/* ---------- Страница фильма ---------- */
+
+.breadcrumbs {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 0.3rem;
+	color: #000 !important;
+	font-size: 0.9rem;
+	margin-bottom: 1.2rem;
+	background: #fff !important;
+	padding: 0.5rem 1rem;
+	border-radius: 8px;
+	max-width: 100%;
+}
+
+.breadcrumbs a {
+	color: #000 !important;
+	text-decoration: none;
+	font-weight: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 100%;
+	display: block;
+}
+
+.breadcrumbs span {
+	font-weight: 700;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 100%;
+	display: block;
+}
+
+.breadcrumbs .material-icons {
+	color: #000 !important;
+}
+
+.details-card {
+	display: flex;
+	gap: 2rem;
+	background: var(--surface) !important;
+	border: 1px solid var(--border);
+	border-radius: 20px !important;
+	padding: 2rem !important;
+	box-shadow: var(--shadow) !important;
+}
+
+.details-poster img {
+	width: 290px;
+	max-width: 100%;
+	border-radius: 14px;
+	display: block;
+	box-shadow: var(--shadow);
+}
+
+.details-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.details-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1.5rem;
+}
+
+.details-head h3 {
+	margin: 0 0 0.3rem;
+	font-size: 2rem;
+	font-weight: 800;
+}
+
+.details-subtitle {
+	color: var(--text-muted);
+	margin: 0;
+}
+
+.details-plot {
+	line-height: 1.7;
+	color: var(--text);
+	font-size: 1.02rem;
+	margin: 1.2rem 0;
+}
+
+.fav-toggle {
+	background: var(--accent) !important;
+	border-radius: 999px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.rating-circle {
+	min-width: 84px;
+	height: 84px;
+	border-radius: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	border: 3px solid currentColor;
+	flex-shrink: 0;
+}
+
+.rating-circle .rating-value {
+	font-size: 1.4rem;
+	font-weight: 800;
+	line-height: 1.1;
+}
+
+.rating-circle .rating-caption {
+	font-size: 0.68rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	opacity: 0.85;
+}
+
+.rating-high {
+	color: #2ecc71;
+}
+
+.rating-mid {
+	color: var(--accent-2);
+}
+
+.rating-low {
+	color: var(--accent);
+}
+
+.details-list {
+	list-style: none;
+	padding: 0;
+	margin: 1.6rem 0 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 1rem;
+}
+
+.details-list li {
+	display: flex;
+	gap: 0.7rem;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 0.8rem 0.9rem;
+}
+
+.info-icon {
+	color: var(--accent);
+	font-size: 1.25rem;
+}
+
+.info-label {
+	display: block;
+	color: var(--text-muted);
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.info-value {
+	display: block;
+	color: var(--text);
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+/* ---------- Кнопки ---------- */
+
+.btn,
+.btn-flat {
+	text-transform: none;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	border-radius: 10px;
+}
+
+.accent-btn {
+	background: var(--accent) !important;
+}
+
+/* Иконка с классом .left внутри кнопки: вписывается в высоту кнопки
+   (36px) и центрируется по строке текста, а не прижимается к верху */
+.btn .material-icons.left,
+.btn-flat .material-icons.left {
+	font-size: 1.25rem;
+	line-height: 36px;
+	margin-right: 0.4rem;
+}
+
+.btn:hover,
+.btn:focus {
+	background: color-mix(in srgb, var(--accent) 85%, #000) !important;
+}
+
+/* ---------- Футер ---------- */
+
+footer.page-footer {
+	background: var(--bg-soft) !important;
+	border-top: 1px solid var(--border);
+	padding: 2.2rem 0 0 !important;
+	margin-top: auto;
+}
+
+.footer-inner {
+	padding: 0 1rem;
+}
+
+.footer-brand {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 800;
+	margin-top: 0;
+}
+
+.footer-brand .material-icons {
+	color: var(--accent);
+}
+
+.footer-title {
+	font-size: 1rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--text-muted);
+}
+
+footer.page-footer ul li a {
+	color: var(--text-muted) !important;
+	padding: 0.3rem 0;
+	display: inline-block;
+	transition: color 0.2s ease;
+}
+
+footer.page-footer ul li a:hover {
+	color: var(--accent) !important;
+}
+
+footer.page-footer p {
+	line-height: 1.6;
+}
+
+.footer-copyright {
+	background: transparent !important;
+	border-top: 1px solid var(--border);
+	color: var(--text-muted) !important;
+}
+
+.footer-copyright .material-icons {
+	vertical-align: text-bottom;
+	color: var(--accent);
+}
+
+/* ---------- Toast-уведомления Materialize ---------- */
+
+#toast-container {
+	top: auto !important;
+	bottom: 6% !important;
+	right: 3% !important;
+	left: auto !important;
+}
+
+.toast-accent {
+	background-color: var(--accent) !important;
+}
+
+.toast-muted {
+	background-color: var(--surface-2) !important;
+	color: var(--text) !important;
+}
+
+/* ---------- Адаптив ---------- */
+
+@media only screen and (max-width: 992px) {
+	.details-card {
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.details-head {
+		justify-content: center;
+	}
+
+	.details-list {
+		text-align: left;
+	}
+
+	.hero-content {
+		padding: 2rem 1.5rem;
+	}
+
+	.hero-content h4 {
+		font-size: 1.5rem;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.movies {
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		gap: 0.9rem;
+	}
+
+	.movie-card .card-image img,
+	.skeleton-poster {
+		height: 250px;
+	}
+
+	.brand-logo {
+		font-size: 1.2rem !important;
+	}
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--surface-2);
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--accent);
+}
+
+
+
