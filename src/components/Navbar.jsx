@@ -4,16 +4,7 @@ import M from 'materialize-css';
 import { useFavorites } from '../context/FavoritesContext';
 import { searchMovies } from '../api/omdb';
 import { TRENDING } from '../constants/trending';
-
-const THEME_KEY = 'react-movies:theme';
-
-function getInitialTheme() {
-	const stored = localStorage.getItem(THEME_KEY);
-	if (stored === 'light' || stored === 'dark') return stored;
-	return window.matchMedia('(prefers-color-scheme: light)').matches
-		? 'light'
-		: 'dark';
-}
+import { THEME_KEY, applyTheme, getInitialTheme } from '../theme';
 
 export function Navbar() {
 	const sidenavRef = useRef(null);
@@ -24,7 +15,7 @@ export function Navbar() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		document.documentElement.setAttribute('data-theme', theme);
+		applyTheme(theme);
 		localStorage.setItem(THEME_KEY, theme);
 	}, [theme]);
 
