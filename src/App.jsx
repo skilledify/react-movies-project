@@ -5,6 +5,7 @@ import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { MovieDetails } from './pages/MovieDetails';
 import { Favorites } from './pages/Favorites';
+import { NotFound } from './pages/NotFound';
 import { FavoritesProvider } from './context/FavoritesContext';
 
 function ScrollToTop() {
@@ -29,7 +30,7 @@ function App() {
 							<Route path="/" element={<Home />} />
 							<Route path="/movie/:imdbID" element={<MovieDetails />} />
 							<Route path="/favorites" element={<Favorites />} />
-							<Route path="*" element={<Home />} />
+							<Route path="*" element={<NotFound />} />
 						</Routes>
 					</main>
 					<Footer />

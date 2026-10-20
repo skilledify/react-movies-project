@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search } from '../components/Search';
 import { Movies } from '../components/Movies';
 import { Preloader } from '../components/Preloader';
@@ -7,6 +8,9 @@ import { searchMovies } from '../api/omdb';
 import { TRENDING } from '../constants/trending';
 
 export function Home() {
+	const [searchParams] = useSearchParams();
+	const initialQuery = searchParams.get('q') || '';
+	const focusSearch = searchParams.get('focus') === 'search';
 	const [movies, setMovies] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -116,7 +120,11 @@ export function Home() {
 				<div className="hero-stripe" aria-hidden="true" />
 			</div>
 
-			<Search onSearch={handleSearch} />
+			<Search
+				onSearch={handleSearch}
+				initialQuery={initialQuery}
+				focusSearch={focusSearch}
+			/>
 
 			{searched && (
 				<div className="results-head">

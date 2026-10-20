@@ -12,14 +12,16 @@ const TYPES = [
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 60 }, (_, i) => CURRENT_YEAR - i);
 
-export function Search({ onSearch }) {
-	const [query, setQuery] = useState('');
+export function Search({ onSearch, initialQuery = '', focusSearch = false }) {
+	const [query, setQuery] = useState(initialQuery);
 	const [type, setType] = useState('all');
 	const [year, setYear] = useState('');
 	const [validationError, setValidationError] = useState('');
 	const typeSelectRef = useRef(null);
 	const yearSelectRef = useRef(null);
-	const isFirstRender = useRef(true);
+	const inputRef = useRef(null);
+	const isFirstRender = useRef(!initialQuery);
+	const appliedInitialRef = useRef(initialQuery);
 	const debouncedQuery = useDebouncedValue(query, 600);
 
 	
@@ -48,6 +50,21 @@ export function Search({ onSearch }) {
 	}, []);
 
 	useEffect(() => {
+		// Реагируем только на смену параметра ?q=, чтобы ручная очистка поля не отменялась
+		if (initialQuery === appliedInitialRef.current) return;
+		appliedInitialRef.current = initialQuery;
+		setQuery(initialQuery);
+	}, [initialQuery]);
+
+	useEffect(() => {
+		// ?focus=search — ставим курсор в поле поиска (например, со страницы 404)
+		if (focusSearch && inputRef.current) {
+			inputRef.current.focus();
+			inputRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		}
+	}, [focusSearch]);
+
+	useEffect(() => {
 		
 		if (isFirstRender.current) {
 			isFirstRender.current = false;
@@ -68,6 +85,7 @@ export function Search({ onSearch }) {
 					<i className="material-icons prefix">search</i>
 					<input
 						id="search-input"
+						ref={inputRef}
 						type="search"
 						value={query}
 						placeholder="Например: Interstellar"
