@@ -115,19 +115,27 @@ npm install
 
 ### Настройка API-ключа
 
-Проект использует [OMDb API](https://www.omdbapi.com/apikey.aspx). Получите бесплатный ключ и создайте файл `.env` в корне проекта:
+Проект использует [OMDb API](https://www.omdbapi.com/apikey.aspx). Ключ **не хранится в браузере**: запросы идут через серверный прокси — Netlify Function (`netlify/functions/api/omdb.mjs`), а ключ хранится в переменной окружения Netlify `OMDB_API_KEY`.
+
+Получите бесплатный ключ на [omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx) и задайте его в Netlify:
+
+**Site configuration → Environment variables → Add a variable**
+
+| Variable | Value |
+|:---|:---|
+| `OMDB_API_KEY` | ваш OMDb-ключ (секрет, никогда не попадает в бандл) |
+
+Публичный адрес прокси можно переопределить в `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Откройте `.env` и подставьте свой ключ:
-
 ```env
-VITE_OMDB_API_KEY=your_api_key_here
+VITE_OMDB_API_URL=https://<ваш-сайт>.netlify.app/api/omdb
 ```
 
-> **Важно:** префикс `VITE_` обязателен — переменные без него не попадают в клиентскую сборку.
+> **Важно:** переменная `VITE_OMDB_API_URL` содержит только публичный URL и не является секретом. OMDb-ключ нельзя размещать в переменных с префиксом `VITE_` — Vite встроит их в клиентский бандл, и ключ утечёт в браузер.
 
 ### Запуск в режиме разработки
 
@@ -167,8 +175,8 @@ npm run preview
 | `npm run dev` | Запускает dev-сервер Vite с горячей перезагрузкой |
 | `npm run build` | Собирает оптимизированный продакшен-бандл в `dist/` |
 | `npm run preview` | Локально запускает собранную версию |
-| `npm run predeploy` | Автоматическая сборка перед деплоем |
-| `npm run deploy` | Публикация `dist/` на GitHub Pages |
+| `npx netlify dev` | Запускает локально Netlify Functions (прокси OMDb) |
+| `npm run deploy` | Публикация `dist/` в ветку `gh-pages` (запасной вариант; основной деплой — через GitHub Actions) |
 
 ---
 
@@ -215,11 +223,25 @@ html[data-theme='dark'] {
 
 ### Работа с API
 
-Все запросы проходят через единый модуль `src/api/omdb.js`, который:
+Браузер **не обращается к OMDb напрямую**. Все запросы идут через серверный прокси (Netlify Function), который добавляет ключ `OMDB_API_KEY` уже на сервере.
+
+```
+Браузер → https://<site>.netlify.app/api/omdb → OMDb API
+                              (ключ только здесь)
+```
+
+Клиентский модуль `src/api/omdb.js`:
 
 - формирует URL через `URLSearchParams` (безопасная кодировка параметров)
 - выбрасывает пустые параметры, чтобы не отправлять мусор на сервер
 - приводит ответ `Response: "False"` к понятной ошибке с текстом от OMDb
+
+Серверная функция `netlify/functions/api/omdb.mjs`:
+
+- валидирует и фильтрует параметры (`s`, `i`, `y`, `type`, `plot`, `page`), всё остальное отбрасывает
+- подставляет `OMDB_API_KEY` из окружения Netlify
+- отдаёт CORS-заголовки (`Access-Control-Allow-Origin: *`), т.к. фронтенд живёт на другом домене
+- возвращает JSON-ошибки: `400` — невалидные параметры, `405` — неверный метод, `502` — OMDb недоступен
 
 ### Дебаунс и защита от «гонки» запросов
 
@@ -229,26 +251,71 @@ html[data-theme='dark'] {
 
 ## 🚀 Деплой
 
-### GitHub Pages (рекомендуется)
+Архитектура деплоя состоит из двух частей:
 
-В проекте уже настроен скрипт `gh-pages`:
+| Часть | Хостинг | Что делает |
+|:---|:---|:---|
+| Фронтенд | GitHub Pages | Отдаёт статику `dist/` |
+| API-прокси | Netlify Functions | Хранит `OMDB_API_KEY` и проксирует запросы к OMDb |
 
-```bash
-npm run deploy
+### 1. Netlify — серверный прокси
+
+Файл `netlify.toml` уже содержит настройки сборки и редирект:
+
+```toml
+[build]
+  publish = "dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/omdb"
+  to = "/.netlify/functions/api/omdb"
+  status = 200
 ```
 
-Команда соберёт проект и опубликует содержимое `dist/` в ветку `gh-pages`.
+Что сделать:
+
+1. Создайте сайт на [netlify.com](https://www.netlify.com) (или подключите репозиторий).
+2. Задайте переменную окружения `OMDB_API_KEY` (**Site configuration → Environment variables**).
+3. Задеплойте сайт — функция `netlify/functions/api/omdb.mjs` станет доступна по адресу
+   `https://<ваш-сайт>.netlify.app/api/omdb`.
+
+Проверка после деплоя:
+
+```bash
+curl -i "https://<ваш-сайт>.netlify.app/api/omdb?s=matrix"
+```
+
+В ответе должен быть JSON с `Search` и `totalResults`, без `apikey` в URL.
+
+### 2. GitHub Pages — фронтенд
+
+В репозитории есть workflow `.github/workflows/deploy.yml`: он собирает `dist/` и публикует его через официальный [GitHub Pages Actions](https://github.com/actions/deploy-pages).
+
+Что сделать:
+
+1. **Settings → Pages → Source → GitHub Actions**.
+2. При необходимости задайте переменную `VITE_OMDB_API_URL` со значением
+   `https://<ваш-сайт>.netlify.app/api/omdb` (вкладка **Settings → Secrets and variables → Actions**).
 
 > **Важно:** в `vite.config.js` указан `base: '/react-movies-project/'`. Если переименуете репозиторий — измените это значение, а также `basename` в `src/App.jsx`.
 
 Для работы прямых ссылок (`/favorites`, `/movie/tt0111161`) плагин `spa-fallback` автоматически создаёт `dist/404.html` — GitHub Pages отдаст его вместо ошибки 404, и приложение подхватит маршрут на клиенте.
 
-### Netlify / Vercel
+### Локальная разработка
 
-- **Сборка:** `npm run build`
-- **Каталог публикации:** `dist`
+`npm run dev` поднимает Vite с прокси: запросы на `/api/omdb` уходят на локальную Netlify Function, а она — в OMDb.
 
-Файл `public/_redirects` уже содержит правило SPA-fallback и будет скопирован в `dist/` автоматически.
+```bash
+npx netlify dev   # во втором терминале — локальные функции
+npm run dev       # в первом — фронтенд
+```
+
+Либо задайте в `.env` прямой URL прокси:
+
+```env
+VITE_OMDB_API_URL=https://<ваш-сайт>.netlify.app/api/omdb
+```
 
 ### Любой другой статический хостинг
 
@@ -256,7 +323,7 @@ npm run deploy
 npm run build
 ```
 
-Затем загрузите содержимое папки `dist/` в корень сайта.
+Затем загрузите содержимое папки `dist/` в корень сайта. Фронтенд будет работать, но запросы пойдут на адрес, заданный в `VITE_OMDB_API_URL` (по умолчанию — `https://react-movies-api.netlify.app/api/omdb`).
 
 ---
 

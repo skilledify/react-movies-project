@@ -1,19 +1,47 @@
-const API_KEY = import.meta.env.VITE_OMDB_API_KEY || 'c8a24847';
-const BASE_URL = 'https://www.omdbapi.com/';
+/**
+ * HTTP-клиент OMDb.
+ *
+ * Запросы идут через серверный прокси (Netlify Function), поэтому
+ * API-ключ OMDb никогда не попадает в браузер и в бандл.
+ * Адрес прокси задаётся переменной VITE_OMDB_API_URL (это публичный URL,
+ * секретом он не является).
+ */
+const DEFAULT_API_URL = 'https://react-movies-api.netlify.app/api/omdb';
 
-async function request(params) {
-	const url = new URL(BASE_URL);
-	url.searchParams.set('apikey', API_KEY);
+// В dev-режиме ходим через относительный путь (его проксирует Vite -> netlify dev),
+// в production — по абсолютному URL опубликованной функции.
+const RAW_API_URL =
+	import.meta.env.VITE_OMDB_API_URL ||
+	(import.meta.env.DEV ? '/api/omdb' : DEFAULT_API_URL);
+
+const API_URL = RAW_API_URL.replace(/\/+$/, '');
+
+function buildUrl(params) {
+	const url = API_URL.startsWith('/')
+		? new URL(API_URL, window.location.origin)
+		: new URL(API_URL);
+
 	Object.entries(params).forEach(([key, value]) => {
 		if (value !== undefined && value !== null && value !== '') {
 			url.searchParams.set(key, value);
 		}
 	});
 
-	const response = await fetch(url);
+	return url;
+}
+
+async function request(params) {
+	let response;
+	try {
+		response = await fetch(buildUrl(params));
+	} catch {
+		throw new Error('Сервер-прокси недоступен');
+	}
+
 	if (!response.ok) {
 		throw new Error(`Ошибка сети: ${response.status}`);
 	}
+
 	const data = await response.json();
 	if (data.Response === 'False') {
 		throw new Error(data.Error || 'Ничего не найдено');

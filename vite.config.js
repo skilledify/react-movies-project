@@ -31,6 +31,15 @@ export default defineConfig({
 	server: {
 		port: 5173,
 		open: true,
+		proxy: {
+			// Прокси OMDb в dev-режиме -> `netlify dev` (по умолчанию :8888).
+			// Путь НЕ переписывается: редирект /api/omdb -> /.netlify/functions/api/omdb
+			// уже задан в netlify.toml и применяется в `netlify dev`.
+			'/api/omdb': {
+				target: 'http://localhost:8888',
+				changeOrigin: true,
+			},
+		},
 	},
 	preview: {
 		port: 4173,

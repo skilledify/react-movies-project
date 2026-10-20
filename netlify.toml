@@ -1,0 +1,18 @@
+# Конфигурация Netlify: только серверный прокси OMDb.
+# Фронтенд (SPA) публикуется на GitHub Pages — https://skilledify.github.io/react-movies-project
+# Сборка статики здесь не нужна, поэтому publish указывает на заглушку.
+
+[build]
+  publish = "netlify/site"
+  command = "echo 'Static build is deployed to GitHub Pages; this site only serves the API proxy.'"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Прокси OMDb: /api/omdb -> netlify/functions/api/omdb.mjs
+[[redirects]]
+  from = "/api/omdb"
+  to = "/.netlify/functions/api/omdb"
+  status = 200
+  force = true
