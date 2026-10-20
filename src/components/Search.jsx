@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import M from 'materialize-css';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 
@@ -79,10 +79,10 @@ export function Search({ onSearch, initialQuery = '', focusSearch = false }) {
 	}, [debouncedQuery, type, year]);
 
 	return (
-		<div className="search-panel card z-depth-1">
+		<div className="z-depth-1 search-panel card">
 			<div className="search-row row">
 				<div className="input-field col s12 m6 l5">
-					<i className="material-icons prefix">search</i>
+
 					<input
 						id="search-input"
 						ref={inputRef}
@@ -102,7 +102,7 @@ export function Search({ onSearch, initialQuery = '', focusSearch = false }) {
 					)}
 					{query && (
 						<button
-							className="btn-flat clear-btn tooltipped"
+							className="clear-btn btn-flat tooltipped"
 							data-position="right"
 							data-tooltip="Очистить"
 							aria-label="Очистить поиск"
