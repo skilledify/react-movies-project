@@ -22,15 +22,14 @@ const CORS_HEADERS = {
 };
 
 function jsonResponse(statusCode, payload) {
-	return {
-		statusCode,
+	return new Response(JSON.stringify(payload), {
+		status: statusCode,
 		headers: {
 			...CORS_HEADERS,
 			'Content-Type': 'application/json; charset=utf-8',
 			'Cache-Control': 'no-store',
 		},
-		body: JSON.stringify(payload),
-	};
+	});
 }
 
 function readParam(query, name) {
@@ -116,20 +115,20 @@ async function fetchFromOmdb(params) {
 }
 
 
-export default async (request, context) => {
-	const { method, queryStringParameters } = request;
+export default async (request) => {
+	const url = new URL(request.url);
 
-	if (method === 'OPTIONS') {
-		return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+	if (request.method === 'OPTIONS') {
+		return new Response('', { status: 204, headers: CORS_HEADERS });
 	}
 
-	if (method !== 'GET') {
+	if (request.method !== 'GET') {
 		return jsonResponse(405, { Response: 'False', Error: 'Метод не поддерживается' });
 	}
 
 	let params;
 	try {
-		params = validateParams(queryStringParameters || {});
+		params = validateParams(Object.fromEntries(url.searchParams));
 	} catch (error) {
 		return jsonResponse(400, { Response: 'False', Error: error.message });
 	}
@@ -151,15 +150,14 @@ export default async (request, context) => {
 			});
 		}
 
-		return {
-			statusCode: 200,
+		return new Response(JSON.stringify(data), {
+			status: 200,
 			headers: {
 				...CORS_HEADERS,
 				'Content-Type': 'application/json; charset=utf-8',
 				'Cache-Control': 'public, max-age=300',
 			},
-			body: JSON.stringify(data),
-		};
+		});
 	} catch {
 		return jsonResponse(502, { Response: 'False', Error: 'OMDb недоступен' });
 	}
