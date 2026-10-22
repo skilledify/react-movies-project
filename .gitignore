@@ -21,3 +21,6 @@ pnpm-debug.log*
 !.vscode/extensions.json
 !.vscode/settings.json
 *.swp
+
+# Local Netlify folder
+.netlify

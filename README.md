@@ -115,7 +115,7 @@ npm install
 
 ### Настройка API-ключа
 
-Проект использует [OMDb API](https://www.omdbapi.com/apikey.aspx). Ключ **не хранится в браузере**: запросы идут через серверный прокси — Netlify Function (`netlify/functions/api/omdb.mjs`), а ключ хранится в переменной окружения Netlify `OMDB_API_KEY`.
+Проект использует [OMDb API](https://www.omdbapi.com/apikey.aspx). Ключ **не хранится в браузере**: запросы идут через серверный прокси — Netlify Function (`netlify/functions/omdb.mjs`), а ключ хранится в переменной окружения Netlify `OMDB_API_KEY`.
 
 Получите бесплатный ключ на [omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx) и задайте его в Netlify:
 
@@ -236,7 +236,7 @@ html[data-theme='dark'] {
 - выбрасывает пустые параметры, чтобы не отправлять мусор на сервер
 - приводит ответ `Response: "False"` к понятной ошибке с текстом от OMDb
 
-Серверная функция `netlify/functions/api/omdb.mjs`:
+Серверная функция `netlify/functions/omdb.mjs`:
 
 - валидирует и фильтрует параметры (`s`, `i`, `y`, `type`, `plot`, `page`), всё остальное отбрасывает
 - подставляет `OMDB_API_KEY` из окружения Netlify
@@ -269,7 +269,7 @@ html[data-theme='dark'] {
 
 [[redirects]]
   from = "/api/omdb"
-  to = "/.netlify/functions/api/omdb"
+  to = "/.netlify/functions/omdb"
   status = 200
 ```
 
@@ -277,7 +277,7 @@ html[data-theme='dark'] {
 
 1. Создайте сайт на [netlify.com](https://www.netlify.com) (или подключите репозиторий).
 2. Задайте переменную окружения `OMDB_API_KEY` (**Site configuration → Environment variables**).
-3. Задеплойте сайт — функция `netlify/functions/api/omdb.mjs` станет доступна по адресу
+3. Задеплойте сайт — функция `netlify/functions/omdb.mjs` станет доступна по адресу
    `https://<ваш-сайт>.netlify.app/api/omdb`.
 
 Проверка после деплоя:
@@ -323,7 +323,7 @@ VITE_OMDB_API_URL=https://<ваш-сайт>.netlify.app/api/omdb
 npm run build
 ```
 
-Затем загрузите содержимое папки `dist/` в корень сайта. Фронтенд будет работать, но запросы пойдут на адрес, заданный в `VITE_OMDB_API_URL` (по умолчанию — `https://react-movies-api.netlify.app/api/omdb`).
+Затем загрузите содержимое папки `dist/` в корень сайта. Фронтенд будет работать, но запросы пойдут на адрес, заданный в `VITE_OMDB_API_URL` (по умолчанию — `https://react-movies-project-api.netlify.app/api/omdb`).
 
 ---
 

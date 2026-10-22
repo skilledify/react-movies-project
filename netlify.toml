@@ -13,6 +13,6 @@
 # Прокси OMDb: /api/omdb -> netlify/functions/api/omdb.mjs
 [[redirects]]
   from = "/api/omdb"
-  to = "/.netlify/functions/api/omdb"
+  to = "/.netlify/functions/omdb"
   status = 200
   force = true

@@ -6,7 +6,7 @@
  * Адрес прокси задаётся переменной VITE_OMDB_API_URL (это публичный URL,
  * секретом он не является).
  */
-const DEFAULT_API_URL = 'https://react-movies-api.netlify.app/api/omdb';
+const DEFAULT_API_URL = 'https://react-movies-project-api.netlify.app/api/omdb';
 
 // В dev-режиме ходим через относительный путь (его проксирует Vite -> netlify dev),
 // в production — по абсолютному URL опубликованной функции.
